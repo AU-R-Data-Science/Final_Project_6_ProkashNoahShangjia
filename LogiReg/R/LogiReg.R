@@ -121,6 +121,20 @@ sigmoid = function(beta, x_vec) {
   1/(1 + exp(-as.vector(x_vec) %*% as.vector(beta)))
 }
 
+####Here is the code of making plot and boostrap
+#Bootstrap
+Inter<-function(B=20,alpha,data){
+  n <- length(data)
+  boot_mean <- rep(NA, B)
+  for (i in 1:B){
+    work_star <- data[sample(1:n, replace = TRUE)]
+    boot_mean[i] <- mean(work_star)
+  }
+  return(quantile(boot_mean, c(alpha/2, 1 - alpha/2)))
+}
+#plot
+plot(y ~ x, data=data, col="steelblue")
+lines(y ~ x, newdata, lwd=2)
 
 #### This is the IDEA of how we can find the Confusion Matrix.
 
