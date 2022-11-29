@@ -38,12 +38,22 @@ loss = function(y_pred, y_train) {
   sum((y_pred - y_train)^2)
 }
 
+#' Runs logistic regression on dataset. 
+#' Returns a column of predictions. 
+#' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
 logistic_regression = function(x_train, y_train, num_epochs = 20) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
-
-  return(logistic_reg_predict_dataset(x_train, beta_cur))
+  y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
+  return(make_ones_and_zeroes(y_pred))
 }
 
+
+#'Given a training dataset and a Beta will predict the target for each x_value
+#'x_train is a Matrix or dataframe... need to double check
+#'beta is a vector of length num_features. This will be found by logistic_regression_trainer
+#'Returns it's prediction of the targets (a column of confidences)
+#'
+#' This gives a column of p_i
 logistic_reg_predict_dataset = function(x_train, beta) {
   y_pred = rep(0,length(x_train[,1]))
   data = as.matrix(x_train)
@@ -57,10 +67,28 @@ logistic_reg_predict_dataset = function(x_train, beta) {
 
   # Wanted to vectorize it... Rstudio just crashed instead.
   #y_pred = apply(X = data, MARGIN = 1, FUN = temp_func)
+  # Probably should have this be in a different function...
+  #y_pred[y_pred >= .5] = 1
+  #y_pred[y_pred < .5] = 0
 
   return(y_pred)
 }
 
+#' This function takes a column of values on U(0,1)
+#' Makes the column become 1's and 0's based on cutoff
+#' Default has cutoff of 0.5
+make_ones_and_zeroes = function(y_pred, cutoff = .5) {
+  y_pred[y_pred >= cutoff] = 1
+  y_pred[y_pred < cutoff] = 0
+  
+  return(y_pred)
+}
+
+
+#' This function will take in a training dataset x_train and its targets y_train.
+#' It will return the vector Beta that it determines using gradient descent on dataset
+#' Can specify number of epochs, but defaults to 20
+#' Returns Beta
 logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
   # Takes in dataframe and returns beta for best fit.
   data = as.matrix(x_train) # Cast to matrix so things work
@@ -83,6 +111,7 @@ logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
   return(beta_cur)
 }
 
+#' I was trying something here, but I removed it because R wasn't happy with me
 is_close = function(b1, b2){
   threshold = .01
   dist_sqred = sum((b1 - b2)**2)
@@ -92,6 +121,11 @@ is_close = function(b1, b2){
   return(FALSE)
 }
 
+#' Helper function that does 1 step of gradient descent on our Beta vector
+#' Takes in a beta vector, training set, targets for training set
+#' Returns a new beta vector. 
+#' If you find that the loss goes up instead of down as a result of this step,
+#' try lowering the learning rate because it probably overstepped a local minimum.
 logistic_regression_trainer_helper = function(beta_init, x_train, y_train, lr = 1) {
   beta_cur  = beta_init
   weight_changes = rep(0, length(beta_cur))
@@ -113,10 +147,18 @@ logistic_regression_trainer_helper = function(beta_init, x_train, y_train, lr = 
   return(beta_cur)
 }
 
+#' Uses sigmoid function to predict row.
+#' Takes a beta and row as input. Both vectors of the same length
+#'     There is a dot product, so they must be same length
 predict_row = function(beta, row) {
   sigmoid(beta, row)
 }
 
+#' Yeah, this feels a bit redundant
+#' Why not just call this instead of predict_row?
+#'     A: Because I could change predictor function if I really wanted by adding an optional 
+#'        variable to predict_row and letting user specify function
+#' Returns p_i from the loss function from Final_Project html
 sigmoid = function(beta, x_vec) {
   1/(1 + exp(-as.vector(x_vec) %*% as.vector(beta)))
 }
