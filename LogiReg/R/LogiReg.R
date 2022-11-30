@@ -21,12 +21,18 @@
 # x_train = as.matrix(x_train)
 
 
-# uploading mtcars data from tidyverse library
+# uploading personal dataset
 
-# df <- mtcars
-# x_train <- df[, c(8,9)]
-# y_train <- df[, 1]
-# x_train = as.matrix(x_train)
+df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
+
+y_train <- df["urban"]
+y_train <- as.vector(y_train)
+y_train <- y_train[["urban"]]
+y_train <- head(y_train, 500)
+
+a <- df[, c(9,11,13)]
+x_train <- data.matrix(a, rownames.force = NA)
+x_train <- head(x_train, 500)
 
 
 #logistic_regression(x_train,y_train, 20)
@@ -34,12 +40,14 @@
 #y_pred = logistic_reg_predict_dataset(x_train, beta_next)
 #loss(y_train, y_pred)
 
+
+
 loss = function(y_pred, y_train) {
   sum((y_pred - y_train)^2)
 }
 
-#' Runs logistic regression on dataset. 
-#' Returns a column of predictions. 
+#' Runs logistic regression on dataset.
+#' Returns a column of predictions.
 #' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
 logistic_regression = function(x_train, y_train, num_epochs = 20) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
@@ -80,7 +88,7 @@ logistic_reg_predict_dataset = function(x_train, beta) {
 make_ones_and_zeroes = function(y_pred, cutoff = .5) {
   y_pred[y_pred >= cutoff] = 1
   y_pred[y_pred < cutoff] = 0
-  
+
   return(y_pred)
 }
 
@@ -101,7 +109,7 @@ logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
 
 
   for (i in 1:num_epochs){
-    beta_next = logistic_regression_trainer_helper(beta_cur, data, targs)
+    beta_cur = logistic_regression_trainer_helper(beta_cur, data, targs)
 
     #if (is_close(beta_next, beta_cur)) {
     #  break
@@ -123,7 +131,7 @@ is_close = function(b1, b2){
 
 #' Helper function that does 1 step of gradient descent on our Beta vector
 #' Takes in a beta vector, training set, targets for training set
-#' Returns a new beta vector. 
+#' Returns a new beta vector.
 #' If you find that the loss goes up instead of down as a result of this step,
 #' try lowering the learning rate because it probably overstepped a local minimum.
 logistic_regression_trainer_helper = function(beta_init, x_train, y_train, lr = 1) {
@@ -156,12 +164,19 @@ predict_row = function(beta, row) {
 
 #' Yeah, this feels a bit redundant
 #' Why not just call this instead of predict_row?
-#'     A: Because I could change predictor function if I really wanted by adding an optional 
+#'     A: Because I could change predictor function if I really wanted by adding an optional
 #'        variable to predict_row and letting user specify function
 #' Returns p_i from the loss function from Final_Project html
 sigmoid = function(beta, x_vec) {
   1/(1 + exp(-as.vector(x_vec) %*% as.vector(beta)))
 }
+
+
+
+
+
+
+
 
 ####Here is the code of making plot and boostrap
 #Bootstrap
