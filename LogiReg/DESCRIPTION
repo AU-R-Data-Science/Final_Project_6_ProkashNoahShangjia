@@ -1,7 +1,6 @@
 Package: LogiReg
 Type: Package
-Title: What the Package Does (Title Case)
-Title: Logistic Regression Package
+Title: Logistic Regression
 Version: 0.1.0
 Author: Authors@R: c(
     person("Prokash", "Palash", email = "pzd0035@auburn.edu", role = c("aut","cre")),
