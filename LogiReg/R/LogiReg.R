@@ -1,25 +1,12 @@
-# Ligistisc_regression
-#
-#
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
 #'  @title Logistic_regression
+#'
+#'
+#'
 #
 #   Install Package:           'Ctrl + Shift + B'
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-# x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
-# y_train = x_train["cardio"]
-# x_train <- subset(x_train, select = -c(1, 2, 3, 4,5, 6, 13))
-# x_train = head(x_train, 100)
-# y_train = head(y_train, 100)
-#
-# x_train = as.matrix(x_train)
 x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
 y_train = x_train["cardio"]
 x_train <- subset(x_train, select = -c(1, 2, 3, 4, 5, 6, 13))
@@ -34,7 +21,6 @@ x_train = as.matrix(x_train)
 #df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
 
 
-# uploading mtcars data from tidyverse library
 df <- df[1:500, c(9, 11, 13, 36)]
 write.csv(df, file = "df.csv", row.names = F)
 
@@ -47,10 +33,6 @@ a <- df[, c(9,11,13)]
 x_train <- data.matrix(a, rownames.force = NA)
 x_train <- head(x_train, 500)
 
-# df <- mtcars
-# x_train <- df[, c(8,9)]
-# y_train <- df[, 1]
-# x_train = as.matrix(x_train)
 
 
 #logistic_regression(x_train,y_train, 20)
@@ -64,11 +46,9 @@ loss = function(y_pred, y_train) {
   sum((y_pred - y_train)^2)
 }
 
-#' Runs logistic regression on dataset.
-#' Returns a column of predictions.
+
+
 #' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
-logistic_regression = function(x_train, y_train, num_epochs = 20) {
-  beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
 #' @description Runs logistic regression on dataset.
 #' @param  x_train \code{datafram} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
@@ -127,7 +107,6 @@ make_ones_and_zeroes = function(y_pred, cutoff = .5) {
 #' It will return the vector Beta that it determines using gradient descent on dataset
 #' Can specify number of epochs, but defaults to 20
 #' Returns Beta
-logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
 logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20, lr = 1) {
   # Takes in dataframe and returns beta for best fit.
   data = as.matrix(x_train) # Cast to matrix so things work
@@ -140,7 +119,6 @@ logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20, lr = 
 
 
   for (i in 1:num_epochs){
-    beta_next = logistic_regression_trainer_helper(beta_cur, data, targs)
     beta_cur = logistic_regression_trainer_helper(beta_cur, data, targs, lr = lr)
 
     #if (is_close(beta_next, beta_cur)) {
