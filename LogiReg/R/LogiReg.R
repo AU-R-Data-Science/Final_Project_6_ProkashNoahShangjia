@@ -25,6 +25,9 @@
 
 df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
 
+df <- df[1:500, c(9, 11, 13, 36)]
+write.csv(df, file = "df.csv", row.names = F)
+
 y_train <- df["urban"]
 y_train <- as.vector(y_train)
 y_train <- y_train[["urban"]]
