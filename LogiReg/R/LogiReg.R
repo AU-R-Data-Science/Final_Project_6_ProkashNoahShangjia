@@ -7,27 +7,27 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-# x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
-# y_train = x_train["cardio"]
-# x_train <- subset(x_train, select = -c(1, 2, 3, 4,5, 6, 13))
-# x_train = head(x_train, 100)
-# y_train = head(y_train, 100)
-#
-# x_train = as.matrix(x_train)
+x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
+y_train = x_train["cardio"]
+x_train <- subset(x_train, select = -c(1, 2, 3, 4, 5, 6, 13))
+x_train = head(x_train, 100)
+y_train = head(y_train, 100)
+
+x_train = as.matrix(x_train)
 
 
 # uploading personal dataset
 
-df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
+#df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
 
-y_train <- df["urban"]
-y_train <- as.vector(y_train)
-y_train <- y_train[["urban"]]
-y_train <- head(y_train, 500)
-
-a <- df[, c(9,11,13)]
-x_train <- data.matrix(a, rownames.force = NA)
-x_train <- head(x_train, 500)
+#y_train <- df["urban"]
+#y_train <- as.vector(y_train)
+#y_train <- y_train[["urban"]]
+#y_train <- head(y_train, 500)
+#
+#a <- df[, c(9,11,13)]
+#x_train <- data.matrix(a, rownames.force = NA)
+#x_train <- head(x_train, 500)
 
 
 #logistic_regression(x_train,y_train, 20)
@@ -53,8 +53,8 @@ loss = function(y_pred, y_train) {
 #' }
 #' @author Mr. Roberto
 #' @export
-logistic_regression = function(x_train, y_train, num_epochs = 20) {
-  beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
+logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1) {
+  beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs, lr = lr)
   y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
   return(make_ones_and_zeroes(y_pred))
 }
@@ -101,7 +101,7 @@ make_ones_and_zeroes = function(y_pred, cutoff = .5) {
 #' It will return the vector Beta that it determines using gradient descent on dataset
 #' Can specify number of epochs, but defaults to 20
 #' Returns Beta
-logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
+logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20, lr = 1) {
   # Takes in dataframe and returns beta for best fit.
   data = as.matrix(x_train) # Cast to matrix so things work
   targs = as.matrix(y_train)
@@ -113,7 +113,7 @@ logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20) {
 
 
   for (i in 1:num_epochs){
-    beta_cur = logistic_regression_trainer_helper(beta_cur, data, targs)
+    beta_cur = logistic_regression_trainer_helper(beta_cur, data, targs, lr = lr)
 
     #if (is_close(beta_next, beta_cur)) {
     #  break
