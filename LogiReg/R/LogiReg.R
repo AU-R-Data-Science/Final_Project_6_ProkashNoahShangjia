@@ -1,12 +1,7 @@
-# Ligistisc_regression
-#
-#
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
+#'  @title Logistic_regression
+#'
+#'
+#'
 #
 #   Install Package:           'Ctrl + Shift + B'
 #   Check Package:             'Ctrl + Shift + E'
@@ -41,14 +36,23 @@ x_train <- head(x_train, 500)
 #loss(y_train, y_pred)
 
 
-
+#' Our loss function
 loss = function(y_pred, y_train) {
   sum((y_pred - y_train)^2)
 }
 
-#' Runs logistic regression on dataset.
-#' Returns a column of predictions.
+
 #' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
+#' @description Runs logistic regression on dataset.
+#' @param  x_train \code{datafram} or matrix (gets cast to matrix) that is our set of features.
+#' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
+#' @param  num_epochs \code{int} number of epochs to train for. Defaults to 20
+#' @return Returns a column of predictions.
+#' \describe{
+#'
+#' }
+#' @author Mr. Roberto
+#' @export
 logistic_regression = function(x_train, y_train, num_epochs = 20) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
   y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
