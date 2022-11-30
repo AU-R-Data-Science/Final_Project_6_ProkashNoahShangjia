@@ -38,8 +38,8 @@ loss = function(y_pred, y_train) {
   sum((y_pred - y_train)^2)
 }
 
-#' Runs logistic regression on dataset. 
-#' Returns a column of predictions. 
+#' Runs logistic regression on dataset.
+#' Returns a column of predictions.
 #' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
 logistic_regression = function(x_train, y_train, num_epochs = 20) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs)
@@ -80,7 +80,7 @@ logistic_reg_predict_dataset = function(x_train, beta) {
 make_ones_and_zeroes = function(y_pred, cutoff = .5) {
   y_pred[y_pred >= cutoff] = 1
   y_pred[y_pred < cutoff] = 0
-  
+
   return(y_pred)
 }
 
@@ -123,7 +123,7 @@ is_close = function(b1, b2){
 
 #' Helper function that does 1 step of gradient descent on our Beta vector
 #' Takes in a beta vector, training set, targets for training set
-#' Returns a new beta vector. 
+#' Returns a new beta vector.
 #' If you find that the loss goes up instead of down as a result of this step,
 #' try lowering the learning rate because it probably overstepped a local minimum.
 logistic_regression_trainer_helper = function(beta_init, x_train, y_train, lr = 1) {
@@ -156,7 +156,7 @@ predict_row = function(beta, row) {
 
 #' Yeah, this feels a bit redundant
 #' Why not just call this instead of predict_row?
-#'     A: Because I could change predictor function if I really wanted by adding an optional 
+#'     A: Because I could change predictor function if I really wanted by adding an optional
 #'        variable to predict_row and letting user specify function
 #' Returns p_i from the loss function from Final_Project html
 sigmoid = function(beta, x_vec) {
@@ -164,19 +164,47 @@ sigmoid = function(beta, x_vec) {
 }
 
 ####Here is the code of making plot and boostrap
-#Bootstrap
-Inter<-function(B=20,alpha,data){
-  n <- length(data)
-  boot_mean <- rep(NA, B)
-  for (i in 1:B){
-    work_star <- data[sample(1:n, replace = TRUE)]
-    boot_mean[i] <- mean(work_star)
+#'Bootstrap
+#'@param B number of bootstraps which by default will be 20
+#'@param alpha is the significance level α to obtain for the 1−α confidence intervals for beta
+#'@param x_train the matrix for independent variable in dataset
+#'@param y_train the matrix for dependent variable in dataset
+ConI<-function(B=20,alpha,x_train,y_train){
+  B<-20
+  rownumber<-ncol(x_train)
+  beta_mat<-matrix(NA,B,rownumber+1)
+  for (i in 1:B) {
+    smp<-sample(1:nrow(x_train), replace = T)
+    beta_mat[i,]<-logistic_regression_trainer(x_train[smp,], y_train[smp])
   }
-  return(quantile(boot_mean, c(alpha/2, 1 - alpha/2)))
+  beta_ci<-matrix(NA,rownumber,2)
+  for (i in 1:rownumber) {
+    beta_ci[i,]<-quantile(beta_mat[i,], c(alpha/2, 1 - alpha/2))
+  }
+  row.names(beta_ci)<-colnames(x_train)
+  return(beta_ci)
 }
-#plot
-plot(y ~ x, data=data, col="steelblue")
-lines(y ~ x, newdata, lwd=2)
+#'Plot of the fitted logistic curve to the actual values
+#'@param x_train the matrix for independent variable in dataset
+#'@param y_train the matrix for dependent variable in dataset
+#'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
+#'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
+logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
+
+
+  colnumber<-ncol(x_train)
+  rownumber<-rownumber(x_train)
+  new_x_train<-matrix(1,colnumber,rownumber)
+  new_x_train[1,]<-x_train[1,]
+  beta<-logistic_regression_trainer(new_x_train,y_train)
+  p_hat<-logistic_reg_predict_dataset(x_train,beta)
+  p_hat<-ifelse(p_hat>0.5, 1, 0)
+  plot(p_hat ~ x_train[1,], col=color)
+  lines(p_hat ~ x_train[1,], newdata, lwd=line_width)
+
+}
+
+
 
 #### This is the IDEA of how we can find the Confusion Matrix.
 
@@ -197,8 +225,33 @@ confusion_matrix <- function(y_pred, y_train){
 }
 
 
+#### Let the user to plot of Accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
+#'This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
+#'@param x_train the matrix for independent variable in data set
+#'@param y_train the matrix for dependent variable in data set
+library(ISLR)
+library(caret)
+library(lattice)
+Make_table<-function(x_train,y_train){
 
-
+  cut_off_value<-seq(0.1,0.9,by=0.1)
+  beta_h<-logistic_regression_trainer(new_x_train,y_train)
+  p_h<-p_hat<-logistic_reg_predict_dataset(x_train,beta)
+  Accuracy<-matrix(NA,9,1)
+  row.names(Accuracy)<-cut_off_value
+  for (i in 1:9) {
+    cutt<-cut_off_value[i]
+    p_hat<-ifelse(p_hat>cutt, 1, 0)
+    a<-confusionMatrix(as.factor(p_h),as.factor(y_train))
+    a<-as.matrix(a)
+    TP<-a[1,1]
+    FN<-a[1,2]
+    FP<-a[2,1]
+    TN<-a[2,2]
+    Accuracy[i,]<-(TP+TN)/(TP+TN+FP+FN)
+  }
+  return(Accuracy)
+}
 
 
 
