@@ -130,11 +130,7 @@ logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20, lr = 
   data = as.matrix(x_train) # Cast to matrix so things work
   targs = as.matrix(y_train)
 
-  beta_init = solve(t(data) %*% data) %*% t(data) %*% targs
-
-  beta_cur = beta_init
-
-
+  beta_cur = make_beta_init(data, targs)
 
   for (i in 1:num_epochs){
     beta_cur = logistic_regression_trainer_helper(beta_cur, data, targs, lr = lr)
@@ -155,6 +151,17 @@ is_close = function(b1, b2){
     return(TRUE)
   }
   return(FALSE)
+}
+
+#' @description Gets beta_init
+#' @param  data \code{matrix} of training data
+#' @param  targs \code{matrix} values of the target
+#' @return Returns Beta_init
+#' @export
+make_beta_init = function(data, targs){
+  beta_init = solve(t(data) %*% data) %*% t(data) %*% targs
+
+  return(beta_init)
 }
 
 
@@ -178,9 +185,9 @@ logistic_regression_trainer_helper = function(beta_start, x_train, y_train, lr =
     s_i = predict_row(beta_cur, row)
 
     #row_grad = (y_i -  s_i) * row
-    row_grad = (y_i/s_i - (1 - y_i)/(1 - s_i))*(s_i * (1 - s_i))
+    row_grad = -(y_i/s_i - (1 - y_i)/(1 - s_i))*(s_i * (1 - s_i)) # Gradient
 
-    weight_changes = weight_changes - row_grad
+    weight_changes = weight_changes + row_grad
   }
 
   # Update beta_cur vector
