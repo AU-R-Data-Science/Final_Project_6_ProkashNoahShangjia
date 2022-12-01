@@ -82,7 +82,6 @@ logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1, cutoff
 #' @author Noah Heckenlively
 #' @export
 logistic_reg_predict_dataset = function(x_train, beta_cur) {
-  y_pred = rep(0,length(x_train[,1]))
   y_pred = rep(0,nrow(x_train))
   data = as.matrix(x_train)
 
@@ -241,10 +240,6 @@ sigmoid = function(beta_cur, x_vec) {
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #' @author Shangjia Li
 #' @export
-ConI<-function(B=20,alpha,x_train,y_train){
-  B<-20
-  rownumber<-ncol(x_train)
-  beta_mat<-matrix(NA,B,rownumber+1)
 ConI<-function(alpha,x_train,y_train,B=20){
   colnumber<-ncol(x_train)
   beta_mat<-matrix(NA,B,colnumber)
@@ -252,9 +247,6 @@ ConI<-function(alpha,x_train,y_train,B=20){
     smp<-sample(1:nrow(x_train), replace = T)
     beta_mat[i,]<-logistic_regression_trainer(x_train[smp,], y_train[smp])
   }
-  beta_ci<-matrix(NA,rownumber,2)
-  for (i in 1:rownumber) {
-    beta_ci[i,]<-quantile(beta_mat[i,], c(alpha/2, 1 - alpha/2))
   beta_ci<-matrix(NA,colnumber,2)
   for (j in 1:colnumber) {
     beta_ci[j,]<-quantile(beta_mat[j,], c(alpha/2, 1 - alpha/2))
@@ -289,9 +281,6 @@ logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
 >>>>>>> Stashed changes
   p_hat<-logistic_reg_predict_dataset(x_train,beta)
   p_hat<-ifelse(p_hat>0.5, 1, 0)
-  plot(p_hat ~ x_train[1,], col=color)
-  lines(p_hat ~ x_train[1,], newdata, lwd=line_width)
-
   datause<-cbind(p_hat,x_train[,1])
   plot(datause[,2],y_train, col="steelblue")
   lines(datause[,2],datause[,1], lwd=2)
