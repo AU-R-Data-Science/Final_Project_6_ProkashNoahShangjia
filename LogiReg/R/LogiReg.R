@@ -23,15 +23,19 @@ x_train = as.matrix(x_train)
 # write.csv(df, file = "df.csv", row.names = F)
 
 
+#df <- df[1:500, c(9, 11, 13, 36)]
 
-# y_train <- df["urban"]
-# y_train <- as.vector(y_train)
-# y_train <- y_train[["urban"]]
-# y_train <- head(y_train, 500)
+df = read.csv(file = "df.csv")
+
+
+y_train <- df["urban"]
+y_train <- as.vector(y_train)
+y_train <- y_train[["urban"]]
+y_train <- head(y_train, 500)
 #
 # a <- df[, c(9,11,13)]
-# x_train <- data.matrix(a, rownames.force = NA)
-# x_train <- head(x_train, 500)
+x_train <- subset(df, select = c(1, 2, 3))
+x_train <- head(x_train, 500)
 
 
 
@@ -53,34 +57,36 @@ loss = function(y_pred, y_train) {
 #' @param  x_train \code{datafram} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #' @param  num_epochs \code{int} number of epochs to train for. Defaults to 20
-#' @return Returns a column of predictions.
+#' @param  lr \code{double} learning rate of logistic regression. If you are not converging, try lowering it.
+#' @param  cutoff A \code{double} on interval (0,1) that says to predict 1 if value >=cutoff. 0 otherwise
+#' @return Returns a column of predictions (1's and 0's) with cutoff of .5 by default
 #' \describe{
 #'
 #' }
-#' @author Mr. Roberto
+#' @author Noah Heckenlively
 #' @export
-logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1) {
+logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1, cutoff = .5) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs, lr = lr)
   y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
-  return(make_ones_and_zeroes(y_pred))
+  return(make_ones_and_zeroes(y_pred, cutoff))
 }
 
 
-#'Given a training dataset and a Beta will predict the target for each x_value
-#'x_train is a Matrix or dataframe... need to double check
-#'beta is a vector of length num_features. This will be found by logistic_regression_trainer
-#'Returns it's prediction of the targets (a column of confidences)
-#'
-#' This gives a column of p_i
-logistic_reg_predict_dataset = function(x_train, beta) {
+#' @description Given a Beta, makes predictions on training data x_train
+#' @param  x_train \code{datafram} or matrix (gets cast to matrix) that is our set of features.
+#' @param  beta_cur Numeric vector of length(number of features) that is found by logistic_regression_trainer
+#' @return Returns a column of predictions (the p_i). Every element is on interval (0,1). Use make_ones_and_zeros to get y_hats
+#' @author Noah Heckenlively
+#' @export
+logistic_reg_predict_dataset = function(x_train, beta_cur) {
   y_pred = rep(0,length(x_train[,1]))
   data = as.matrix(x_train)
 
-  temp_func = function(row) {predict_row(beta, row)}
+  #temp_func = function(row) {predict_row(beta, row)}
 
   for (i in 1:length(x_train[,1])) {
     row = x_train[i,]
-    y_pred[i] = predict_row(beta, row)
+    y_pred[i] = predict_row(beta_cur, row)
   }
 
   # Wanted to vectorize it... Rstudio just crashed instead.
@@ -92,9 +98,13 @@ logistic_reg_predict_dataset = function(x_train, beta) {
   return(y_pred)
 }
 
-#' This function takes a column of values on U(0,1)
-#' Makes the column become 1's and 0's based on cutoff
-#' Default has cutoff of 0.5
+
+#' @description Makes the column become 1's and 0's based on cutoff
+#' @param  y_pred Column or list like object of elements on interval (0,1)
+#' @param  cutoff Default is 0.5. value of entry in ouput column is 1 if y_pred[i] >= cutoff. 0 Otherwise
+#' @return Returns a column of 1's and 0's same length as y_pred
+#' @author Noah Heckenlively
+#' @export
 make_ones_and_zeroes = function(y_pred, cutoff = .5) {
   y_pred[y_pred >= cutoff] = 1
   y_pred[y_pred < cutoff] = 0
@@ -107,6 +117,12 @@ make_ones_and_zeroes = function(y_pred, cutoff = .5) {
 #' It will return the vector Beta that it determines using gradient descent on dataset
 #' Can specify number of epochs, but defaults to 20
 #' Returns Beta
+#' @description Makes the column become 1's and 0's based on cutoff
+#' @param  y_pred Column or list like object of elements on interval (0,1)
+#' @param  cutoff Default is 0.5. value of entry in ouput column is 1 if y_pred[i] >= cutoff. 0 Otherwise
+#' @return Returns a column of 1's and 0's same length as y_pred
+#' @author Noah Heckenlively
+#' @export
 logistic_regression_trainer <- function(x_train, y_train, num_epochs = 20, lr = 1) {
   # Takes in dataframe and returns beta for best fit.
   data = as.matrix(x_train) # Cast to matrix so things work
@@ -168,8 +184,12 @@ logistic_regression_trainer_helper = function(beta_init, x_train, y_train, lr = 
 #' Uses sigmoid function to predict row.
 #' Takes a beta and row as input. Both vectors of the same length
 #'     There is a dot product, so they must be same length
-predict_row = function(beta, row) {
-  sigmoid(beta, row)
+predict_row = function(beta_cur, row) {
+  vec = c()
+  for (i in 1:length(row)){
+    vec = c(vec,row[[i]])
+  }
+  sigmoid(beta_cur, vec)
 }
 
 #' Yeah, this feels a bit redundant
@@ -177,8 +197,8 @@ predict_row = function(beta, row) {
 #'     A: Because I could change predictor function if I really wanted by adding an optional
 #'        variable to predict_row and letting user specify function
 #' Returns p_i from the loss function from Final_Project html
-sigmoid = function(beta, x_vec) {
-  1/(1 + exp(-as.vector(x_vec) %*% as.vector(beta)))
+sigmoid = function(beta_cur, x_vec) {
+  1/(1 + exp(-(as.vector(x_vec) %*% as.vector(beta_cur))))
 }
 
 
