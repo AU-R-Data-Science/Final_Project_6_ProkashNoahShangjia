@@ -7,19 +7,21 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
-y_train = x_train["cardio"]
-x_train <- subset(x_train, select = -c(1, 2, 3, 4, 5, 6, 13))
-x_train = head(x_train, 100)
-y_train = head(y_train, 100)
-
-x_train = as.matrix(x_train)
+# x_train = read.csv2("D:/DDox/ML/Project/ML_FinalProject_Team17/cardio_train.csv", sep = ";")
+# y_train = x_train["cardio"]
+# x_train <- subset(x_train, select = -c(1, 2, 3, 4, 5, 6, 13))
+# x_train = head(x_train, 100)
+# y_train = head(y_train, 100)
+#
+# x_train = as.matrix(x_train)
 
 
 # uploading personal dataset
 
-# df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
-# df <- df[1:500, c(9, 11, 13, 36)]
+df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
+df <- df[1:500, c(3:6, 9, 11, 13, 36)]
+# x_train <- data.matrix(df[,1:3], rownames.force = NA)
+# y_train <- data.matrix(df[,4], rownames.force = NA)
 # write.csv(df, file = "df.csv", row.names = F)
 
 
@@ -233,20 +235,35 @@ logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
 
 #### This is the IDEA of how we can find the Confusion Matrix.
 
-confusion_matrix <- function(y_pred, y_train){
-  y_pred = ifelse(y_pred>0.5, 1, 0)
+#' Title
+#'
+#' @param y_pred (this is the predicted value of target variable)
+#' @param y_train (this is the actual target variable)
+#' @param cutoff_value this is the cut off value. The default is 0.5
+#'
+#' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
+#' @export confusion_matrix(y_pred, y_train, cutoff_value)
+#'
+confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
+  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
 
   matrix_table = table(y_pred, y_train)
 
 
   prevalence = matrix_table[4]/sum(matrix_table[1:4])
-  accuracy = sum(matrix_table[1], matrix_table[4])/sum(matrix_table[1:4])
+  accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
   sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
-  specificity = matrix_table[1] / matrix_table(cm[1], matrix_table[2])
-  fscore = (2 * (sensitivity * Prevalence))/(sensitivity + Prevalence)
+  specificity = matrix_table[1] / sum(matrix_table[1], matrix_table[2])
+  fscore = (2 * (sensitivity * prevalence))/(sensitivity + prevalence)
   DOR = (matrix_table[4]/matrix_table[3])/(matrix_table[2]/matrix_table[1])
 
-  return(matrix_table, prevalence, accuracy, sensitivity, specificity, fscore, DOR)
+  print(c("confusion matrix" = print.table(matrix_table),
+        "prevalence" = prevalence,
+        "accuracy" = accuracy,
+        "sensitivity" = sensitivity,
+        "specificity" = specificity,
+        "fscore" = fscore,
+        "DOR" = DOR))
 }
 
 
