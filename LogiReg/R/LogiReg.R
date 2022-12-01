@@ -259,31 +259,19 @@ ConI<-function(alpha,x_train,y_train,B=20){
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
-<<<<<<< Updated upstream
-logiregPlot<-function(x_train,y_train,color="steelblue",line_width=2){
-
-
-  colnumber<-ncol(x_train)
-  rownumber<-nrow(x_train)
-  new_x_train<-matrix(1,colnumber,rownumber)
-  new_x_train[1,]<-x_train[1,]
-  beta<-logistic_regression_trainer(new_x_train,y_train)
-=======
 #'@author  Shangjia Li
 #'@export
-beta<-logistic_regression_trainer(x_train,y_train)
 logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
   colnumber<-ncol(x_train)
   rownumber<-nrow(x_train)
   new_x_train<-matrix(1,rownumber,colnumber-1)
   new_x_train<-cbind(x_train[,1],new_x_train)
   new_x_train[,1]<-x_train[,1]
->>>>>>> Stashed changes
   p_hat<-logistic_reg_predict_dataset(x_train,beta)
   p_hat<-ifelse(p_hat>0.5, 1, 0)
   datause<-cbind(p_hat,x_train[,1])
-  plot(datause[,2],y_train, col="steelblue")
-  lines(datause[,2],datause[,1], lwd=2)
+  plot(datause[,2],y_train, col=color,xlab="x",ylab="predict")
+  lines(datause[,2],datause[,1], lwd=line_width)
 }
 
 
@@ -328,19 +316,32 @@ matrix_table=table(y_pred, y_train)
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@author Shangjia Li
 #'@export
+
 Make_table<-function(y_pred,y_train){
+  c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
+    y_pred = ifelse(y_pred>cutoff_value, 1, 0)
+    matrix_table=table(y_pred, y_train)
+    accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
+    print(accuracy)
+  }
   cut_off_value<-seq(0.1,0.9,by=0.1)
   Accuracy<-matrix(NA,9,1)
   row.names(Accuracy)<-cut_off_value
-
   for (i in 1:9) {
     cutt<-cut_off_value[i]
-    Accuracy[i,]<-confusion_matrix(y_pred,y_train,cutt)[6]
+    Accuracy[i,]<-c_matrix(y_pred,y_train,cutt)
   }
-  return(Accuracy)
 }
 
-
+#Or
+#Make_table<-function(y_pred,y_train){
+ # cut_off_value<-seq(0.1,0.9,by=0.1)
+  #for (i in 1:9) {
+  #  cutt<-cut_off_value[i]
+  #  Accuracy<-confusion_matrix(y_pred,y_train,cutt)
+ # }
+ # return(Accuracy)
+#}
 
 
 
