@@ -47,7 +47,9 @@
 #loss(y_train, y_pred)
 
 
-#' @descrpition Our loss function
+#' @description Our loss function
+#' @param  y_pred column of p_i
+#' @param  y_train column of 1's and 0's
 #' @export
 loss = function(y_pred, y_train) {
   #sum((y_pred - y_train)^2)
@@ -285,10 +287,8 @@ logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
 #' @param y_pred (this is the predicted value of target variable)
 #' @param y_train (this is the actual target variable)
 #' @param cutoff_value this is the cut off value. The default is 0.5
-#'
 #' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
 #' @export
-#'
 confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   y_pred = ifelse(y_pred>cutoff_value, 1, 0)
 
