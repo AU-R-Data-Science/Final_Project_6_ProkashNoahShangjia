@@ -54,7 +54,7 @@ loss = function(y_pred, y_train) {
 
 #' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
 #' @description Runs logistic regression on dataset.
-#' @param  x_train \code{datafram} or matrix (gets cast to matrix) that is our set of features.
+#' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #' @param  num_epochs \code{int} number of epochs to train for. Defaults to 20
 #' @param  lr \code{double} learning rate of logistic regression. If you are not converging, try lowering it.
@@ -209,11 +209,11 @@ sigmoid = function(beta_cur, x_vec) {
 
 
 ####Here is the code of making plot and boostrap
-#'Bootstrap
-#'@param B number of bootstraps which by default will be 20
-#'@param alpha is the significance level α to obtain for the 1−α confidence intervals for beta
-#'@param x_train the matrix for independent variable in dataset
-#'@param y_train the matrix for dependent variable in dataset
+#'@description The is the function for confident interval by using Bootstrap
+#'@param B \code{numeric} of bootstraps which by default will be 20
+#'@param alpha \code{numeric} is the significance level to obtain the confidence intervals for beta
+#' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
+#' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
 ConI<-function(B=20,alpha,x_train,y_train){
   B<-20
   rownumber<-ncol(x_train)
@@ -229,9 +229,9 @@ ConI<-function(B=20,alpha,x_train,y_train){
   row.names(beta_ci)<-colnames(x_train)
   return(beta_ci)
 }
-#'Plot of the fitted logistic curve to the actual values
-#'@param x_train the matrix for independent variable in dataset
-#'@param y_train the matrix for dependent variable in dataset
+#'@description Plot of the fitted logistic curve to the actual values
+#'@param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
+#'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
 logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
@@ -291,9 +291,9 @@ show_info<-function(y_pred, y_train,cutoff_value=0.5){
   print(build_confusion_matrix(y_pred, y_train,cutoff_value))
 }
 #### Let the user to plot of Accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
-#'This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
-#'@param y_pred the matrix for predict dependent variable in data set
-#'@param y_train the matrix for dependent variable in data set
+#'@description This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
+#'@param  y_pred \code{dataframe} or matrix (gets cast to matrix) that is our set of predictions.
+#'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 
 Make_table<-function(y_pred,y_train){
   cut_off_value<-seq(0.1,0.9,by=0.1)
