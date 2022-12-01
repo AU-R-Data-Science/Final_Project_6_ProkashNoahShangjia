@@ -201,6 +201,7 @@ logistic_regression_trainer_helper = function(beta_start, x_train, y_train, lr =
   return(beta_cur)
 }
 
+
 #' @title Predict Row
 #' @description  Predicts target from the row. beta_cur and row must be same length because of dot product
 #' @param  beta_cur Numeric vector of length(number of features) that used to predict target from data
