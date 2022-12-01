@@ -1,5 +1,5 @@
 
-
+"""
 y_pred <- logistic_regression(x_train, y_train, 40)
 
 lr <- 0.01
@@ -29,3 +29,4 @@ matrix_table
 
 y_train <- c(1, 1, 0, 1, 0, 0, 0, 1, 1)
 y_pred <- c(1, 0, 0, 1, 0, 1, 0, 1, 1)
+"""
