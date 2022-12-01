@@ -339,7 +339,6 @@ Make_table<-function(y_pred,y_train){
   }
   return(Accuracy)
 }
-Make_table(y_pred_1,y_train)
 
 
 
