@@ -318,7 +318,6 @@ matrix_table=table(y_pred, y_train)
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@author Shangjia Li
 #'@export
-
 Make_table<-function(y_pred,y_train){
   c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
     y_pred = ifelse(y_pred>cutoff_value, 1, 0)
