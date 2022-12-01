@@ -1,4 +1,3 @@
-#'  @title Logistic_regression
 #'
 #'
 #'
@@ -46,8 +45,11 @@
 #y_pred = logistic_reg_predict_dataset(x_train, beta_next)
 #loss(y_train, y_pred)
 
-
-#' @descrpition Our loss function
+#' @title Loss Function
+#' @description Our loss function for the logistic regression
+#' @param  y_pred column of p_i
+#' @param  y_train column of 1's and 0's
+#' @return Loss, a numeric type
 #' @export
 loss = function(y_pred, y_train) {
   #sum((y_pred - y_train)^2)
@@ -56,7 +58,7 @@ loss = function(y_pred, y_train) {
 
 
 
-#' This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
+#' @title Logistic_regression
 #' @description Runs logistic regression on dataset.
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
@@ -65,7 +67,7 @@ loss = function(y_pred, y_train) {
 #' @param  cutoff A \code{double} on interval (0,1) that says to predict 1 if value >=cutoff. 0 otherwise
 #' @return Returns a column of predictions (1's and 0's) with cutoff of .5 by default
 #' \describe{
-#'
+#'     This WILL OVERFIT to data, so it is prefered to get beta first and use your own.
 #' }
 #' @author Noah Heckenlively
 #' @export
@@ -76,6 +78,7 @@ logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1, cutoff
 }
 
 
+#' @title Predicts Dataset
 #' @description Given a Beta, makes predictions on training data x_train
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  beta_cur Numeric vector of length(number of features) that is found by logistic_regression_trainer
@@ -102,7 +105,7 @@ logistic_reg_predict_dataset = function(x_train, beta_cur) {
   return(y_pred)
 }
 
-
+#' @title Make Ones and Zeroes
 #' @description Makes the column become 1's and 0's based on cutoff
 #' @param  y_pred Column or list like object of elements on interval (0,1)
 #' @param  cutoff Default is 0.5. value of entry in ouput column is 1 if y_pred[i] >= cutoff. 0 Otherwise
@@ -117,7 +120,7 @@ make_ones_and_zeroes = function(y_pred, cutoff = .5) {
 }
 
 
-
+#' @title Trains Logistic Regression
 #' @description Runs gradient descent to find beta
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
@@ -154,6 +157,7 @@ is_close = function(b1, b2){
   return(FALSE)
 }
 
+#' @title Beta Init
 #' @description Gets beta_init
 #' @param  data \code{matrix} of training data
 #' @param  targs \code{matrix} values of the target
@@ -165,7 +169,7 @@ make_beta_init = function(data, targs){
   return(beta_init)
 }
 
-
+#' @title Logistic Regression Training Helper Function
 #' @description Helper function that does 1 step of gradient descent on our Beta vector
 #' @param  beta_start Numeric vector of length(number of features) that used to predict target from data
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
@@ -197,13 +201,12 @@ logistic_regression_trainer_helper = function(beta_start, x_train, y_train, lr =
   return(beta_cur)
 }
 
-
+#' @title Predict Row
 #' @description  Predicts target from the row. beta_cur and row must be same length because of dot product
 #' @param  beta_cur Numeric vector of length(number of features) that used to predict target from data
 #' @param  row A row from out dataset that we are trying to predict on.
 #' @return P_i
 #' @author Noah Heckenlively
-#'
 predict_row = function(beta_cur, row) {
   vec = c()
   for (i in 1:length(row)){
@@ -221,7 +224,6 @@ predict_row = function(beta_cur, row) {
 #' @param  x_vec A row from out dataset that we are trying to predict on.
 #' @return P_i
 #' @author Noah Heckenlively
-#'
 sigmoid = function(beta_cur, x_vec) {
   1/(1 + exp(-(as.vector(x_vec) %*% as.vector(beta_cur))))
 }
@@ -234,9 +236,10 @@ sigmoid = function(beta_cur, x_vec) {
 
 
 ####Here is the code of making plot and boostrap
-#'@description The is the function for confident interval by using Bootstrap
-#'@param B \code{numeric} of bootstraps which by default will be 20
-#'@param alpha \code{numeric} is the significance level to obtain the confidence intervals for beta
+#' @title Confidence Interval
+#' @description The is the function for confident interval by using Bootstrap
+#' @param B \code{numeric} of bootstraps which by default will be 20
+#' @param alpha \code{numeric} is the significance level to obtain the confidence intervals for beta
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #' @author Shangjia Li
@@ -255,14 +258,15 @@ ConI<-function(alpha,x_train,y_train,B=20){
   row.names(beta_ci)<-colnames(x_train)
   return(beta_ci)
 }
-#'@description Plot of the fitted logistic curve to the actual values
-#'@param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
-#'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
-#'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
-#'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
-#'@param beta \code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.
-#'@author  Shangjia Li
-#'@export
+#' @title Logistic Regression Plot
+#' @description Plot of the fitted logistic curve to the actual values
+#' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
+#' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
+#' @param color color code or name, see colors, palette. Here NULL means colour "steelblue".
+#' @param line_width line width, also used for (non-filled) plot symbols, see lines and points.
+#' @param beta \code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.
+#' @author  Shangjia Li
+#' @export
 logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
   colnumber<-ncol(x_train)
   rownumber<-nrow(x_train)
@@ -281,14 +285,12 @@ logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
 
 
 #' Title
-#'
+#' @title Confusion Matrix
 #' @param y_pred (this is the predicted value of target variable)
 #' @param y_train (this is the actual target variable)
 #' @param cutoff_value this is the cut off value. The default is 0.5
-#'
 #' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
 #' @export
-#'
 confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   y_pred = ifelse(y_pred>cutoff_value, 1, 0)
 
@@ -313,12 +315,12 @@ matrix_table=table(y_pred, y_train)
 
 
 #### Let the user to plot of Accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
-#'@description This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.Partial Function is build up based on previous confusion_matrix function.
-#'@param  y_pred \code{dataframe} or matrix (gets cast to matrix) that is our set of predictions.
-#'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
-#'@author Shangjia Li
-#'@export
-
+#' @title Accuracy Plots over Cutoff Values
+#' @description This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.Partial Function is build up based on previous confusion_matrix function.
+#' @param  y_pred \code{dataframe} or matrix (gets cast to matrix) that is our set of predictions.
+#' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
+#' @author Shangjia Li
+#' @export
 Make_table<-function(y_pred,y_train){
   c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
     y_pred = ifelse(y_pred>cutoff_value, 1, 0)
