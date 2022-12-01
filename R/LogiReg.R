@@ -27,17 +27,17 @@
 
 #df <- df[1:500, c(9, 11, 13, 36)]
 
-df = read.csv(file = "df.csv")
+#df = read.csv(file = "df.csv")
 
 
-y_train <- df["urban"]
-y_train <- as.vector(y_train)
-y_train <- y_train[["urban"]]
-y_train <- head(y_train, 500)
+#y_train <- df["urban"]
+#y_train <- as.vector(y_train)
+#y_train <- y_train[["urban"]]
+#y_train <- head(y_train, 500)
 #
 # a <- df[, c(9,11,13)]
-x_train <- subset(df, select = c(1, 2, 3))
-x_train <- head(x_train, 500)
+#x_train <- subset(df, select = c(1, 2, 3))
+#x_train <- head(x_train, 500)
 
 
 
@@ -47,7 +47,8 @@ x_train <- head(x_train, 500)
 #loss(y_train, y_pred)
 
 
-#' Our loss function
+#' @descrpition Our loss function
+#' @export
 loss = function(y_pred, y_train) {
   #sum((y_pred - y_train)^2)
   sum((-y_train*log(y_pred) - (1 - y_train)*log(1 - y_pred)))
