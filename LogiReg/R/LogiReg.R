@@ -231,6 +231,8 @@ sigmoid = function(beta_cur, x_vec) {
 #'@param alpha \code{numeric} is the significance level to obtain the confidence intervals for beta
 #' @param  x_train \code{dataframe} or matrix (gets cast to matrix) that is our set of features.
 #' @param  y_train \code{dataframe} value of the target. Gets cast to matrix
+#' @author Shangjia Li
+#' @export
 ConI<-function(B=20,alpha,x_train,y_train){
   B<-20
   rownumber<-ncol(x_train)
@@ -251,6 +253,8 @@ ConI<-function(B=20,alpha,x_train,y_train){
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
+#'@author  Shangjia Li
+#'@export
 logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
 
 
@@ -300,32 +304,15 @@ matrix_table=table(y_pred, y_train)
         "fscore" = fscore,
         "DOR" = DOR))
 
-build_confusion_matrix<-function(y_pred, y_train,cutoff_value=0.5){
-  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
-  matrix_table = table(y_pred, y_train)
-  return(matrix_table)
 }
-find_metrics<-function(y_pred, y_train,cutoff_value=0.5){
-  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
-  matrix_table = table(y_pred, y_train)
-  prevalence = matrix_table[4]/sum(matrix_table[1:4])
-  accuracy = sum(matrix_table[1], matrix_table[4])/sum(matrix_table[1:4])
-  sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
-  specificity = matrix_table[1] / sum(matrix_table[1], matrix_table[2])
-  fscore = (2 * (sensitivity * prevalence))/(sensitivity + prevalence)
-  DOR = (matrix_table[4]/matrix_table[3])/(matrix_table[2]/matrix_table[1])
-  Value<-c(prevalence, accuracy, sensitivity, specificity, fscore, DOR)
-  Metrics <-c('prevalence', 'accuracy', 'sensitivity', 'specificity', 'fscore', 'DOR')
-  return(rbind(Metrics,Value))
-}
-show_info<-function(y_pred, y_train,cutoff_value=0.5){
-  print(find_metrics(y_pred, y_train,cutoff_value))
-  print(build_confusion_matrix(y_pred, y_train,cutoff_value))
-}
+
+
 #### Let the user to plot of Accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
-#'@description This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
+#'@description This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.Partial Function is build up based on previous confusion_matrix function.
 #'@param  y_pred \code{dataframe} or matrix (gets cast to matrix) that is our set of predictions.
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
+#'@author Shangjia Li
+#'@export
 
 Make_table<-function(y_pred,y_train){
   cut_off_value<-seq(0.1,0.9,by=0.1)
@@ -334,7 +321,7 @@ Make_table<-function(y_pred,y_train){
 
   for (i in 1:9) {
     cutt<-cut_off_value[i]
-    Accuracy[i,]<-find_metrics(p_hat,y_train,cutt)[2,2]
+    Accuracy[i,]<-confusion_matrix(y_pred,y_train,cutt)[6]
   }
   return(Accuracy)
 }
