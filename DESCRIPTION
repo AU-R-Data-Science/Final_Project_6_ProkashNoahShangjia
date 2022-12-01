@@ -3,7 +3,7 @@ Type: Package
 Title: Logistic Regression
 Version: 0.1.0
 Author: Authors@R: c(
-    person("Prokash", "Palash", email = "pzd0035@auburn.edu", role = c("aut","cre")),
+    person("Prokash", "Deb Palash", email = "pzd0035@auburn.edu", role = c("aut","cre")),
     person("Shangjia", "Li", email = "szl0164", role = "aut"),
     person("Noah", "Heckenively", email = "heckenna@rose-hulman.edu", role = "aut"),
     )
