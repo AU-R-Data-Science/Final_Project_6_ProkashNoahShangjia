@@ -18,8 +18,8 @@
 
 # uploading personal dataset
 
-df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
-df <- df[1:500, c(3:6, 9, 11, 13, 36)]
+#df <- read_excel("C:/Users/proka/OneDrive - Auburn University/Auburn/Research/Data/Fish_demand_DoubleHurdle/New_dataframe/Data/Main_consumption.xlsx")
+#df <- df[1:500, c(3:6, 9, 11, 13, 36)]
 # x_train <- data.matrix(df[,1:3], rownames.force = NA)
 # y_train <- data.matrix(df[,4], rownames.force = NA)
 # write.csv(df, file = "df.csv", row.names = F)
@@ -240,11 +240,11 @@ ConI<-function(B=20,alpha,x_train,y_train){
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
-logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
+logiregPlot<-function(x_train,y_train,color="steelblue",line_width=2){
 
 
   colnumber<-ncol(x_train)
-  rownumber<-rownumber(x_train)
+  rownumber<-nrow(x_train)
   new_x_train<-matrix(1,colnumber,rownumber)
   new_x_train[1,]<-x_train[1,]
   beta<-logistic_regression_trainer(new_x_train,y_train)
@@ -308,6 +308,8 @@ Make_table<-function(y_pred,y_train){
   }
   return(Accuracy)
 }
+
+
 
 
 
