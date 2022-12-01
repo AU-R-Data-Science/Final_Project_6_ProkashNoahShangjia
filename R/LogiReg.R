@@ -287,7 +287,7 @@ logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
 #' @param cutoff_value this is the cut off value. The default is 0.5
 #'
 #' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
-#' @export confusion_matrix(y_pred, y_train, cutoff_value)
+#' @export
 #'
 confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   y_pred = ifelse(y_pred>cutoff_value, 1, 0)
