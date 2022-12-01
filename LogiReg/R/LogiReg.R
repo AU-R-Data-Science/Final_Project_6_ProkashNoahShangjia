@@ -253,51 +253,59 @@ logiregPlot<-finction(x_train,y_train,color="steelblue",line_width=2){
 
 #### This is the IDEA of how we can find the Confusion Matrix.
 
-confusion_matrix <- function(y_pred, y_train){
-  y_pred = ifelse(y_pred>0.5, 1, 0)
-
+confusion_matrix <- function(y_pred, y_train,cutoff_value=0.5){
+  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
   matrix_table = table(y_pred, y_train)
-
-
   prevalence = matrix_table[4]/sum(matrix_table[1:4])
   accuracy = sum(matrix_table[1], matrix_table[4])/sum(matrix_table[1:4])
   sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
-  specificity = matrix_table[1] / matrix_table(cm[1], matrix_table[2])
-  fscore = (2 * (sensitivity * Prevalence))/(sensitivity + Prevalence)
+  specificity = matrix_table[1] / sum(matrix_table[1], matrix_table[2])
+  fscore = (2 * (sensitivity * prevalence))/(sensitivity + prevalence)
   DOR = (matrix_table[4]/matrix_table[3])/(matrix_table[2]/matrix_table[1])
-
-  return(matrix_table, prevalence, accuracy, sensitivity, specificity, fscore, DOR)
+  Value<-c(prevalence, accuracy, sensitivity, specificity, fscore, DOR)
+  Metrics <-c('prevalence', 'accuracy', 'sensitivity', 'specificity', 'fscore', 'DOR')
+  print(rbind(Metrics,Value))
+  matrix_table
 }
 
-
+build_confusion_matrix<-function(y_pred, y_train,cutoff_value=0.5){
+  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
+  matrix_table = table(y_pred, y_train)
+  return(matrix_table)
+}
+find_metrics<-function(y_pred, y_train,cutoff_value=0.5){
+  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
+  matrix_table = table(y_pred, y_train)
+  prevalence = matrix_table[4]/sum(matrix_table[1:4])
+  accuracy = sum(matrix_table[1], matrix_table[4])/sum(matrix_table[1:4])
+  sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
+  specificity = matrix_table[1] / sum(matrix_table[1], matrix_table[2])
+  fscore = (2 * (sensitivity * prevalence))/(sensitivity + prevalence)
+  DOR = (matrix_table[4]/matrix_table[3])/(matrix_table[2]/matrix_table[1])
+  Value<-c(prevalence, accuracy, sensitivity, specificity, fscore, DOR)
+  Metrics <-c('prevalence', 'accuracy', 'sensitivity', 'specificity', 'fscore', 'DOR')
+  return(rbind(Metrics,Value))
+}
+show_info<-function(y_pred, y_train,cutoff_value=0.5){
+  print(find_metrics(y_pred, y_train,cutoff_value))
+  print(build_confusion_matrix(y_pred, y_train,cutoff_value))
+}
 #### Let the user to plot of Accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
 #'This function will provide you a plot of accuracy over a grid of cut-off values for prediction going from 0.1 to 0.9 with steps of 0.1.
-#'@param x_train the matrix for independent variable in data set
+#'@param y_pred the matrix for predict dependent variable in data set
 #'@param y_train the matrix for dependent variable in data set
-library(ISLR)
-library(caret)
-library(lattice)
-Make_table<-function(x_train,y_train){
 
+Make_table<-function(y_pred,y_train){
   cut_off_value<-seq(0.1,0.9,by=0.1)
-  beta_h<-logistic_regression_trainer(new_x_train,y_train)
-  p_h<-p_hat<-logistic_reg_predict_dataset(x_train,beta)
   Accuracy<-matrix(NA,9,1)
   row.names(Accuracy)<-cut_off_value
+
   for (i in 1:9) {
     cutt<-cut_off_value[i]
-    p_hat<-ifelse(p_hat>cutt, 1, 0)
-    a<-confusionMatrix(as.factor(p_h),as.factor(y_train))
-    a<-as.matrix(a)
-    TP<-a[1,1]
-    FN<-a[1,2]
-    FP<-a[2,1]
-    TN<-a[2,2]
-    Accuracy[i,]<-(TP+TN)/(TP+TN+FP+FN)
+    Accuracy[i,]<-find_metrics(p_hat,y_train,cutt)[2,2]
   }
   return(Accuracy)
 }
-
 
 
 
