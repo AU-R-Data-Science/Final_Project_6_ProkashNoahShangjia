@@ -259,6 +259,7 @@ ConI<-function(alpha,x_train,y_train,B=20){
 #'@param  y_train \code{dataframe} value of the target. Gets cast to matrix
 #'@param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #'@param line_width line width, also used for (non-filled) plot symbols, see lines and points.
+#'@param beta \code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.
 #'@author  Shangjia Li
 #'@export
 logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
