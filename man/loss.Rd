@@ -2,7 +2,7 @@
 % Please edit documentation in R/LogiReg.R
 \name{loss}
 \alias{loss}
-\title{@title Logistic_regression}
+\title{Loss Function}
 \usage{
 loss(y_pred, y_train)
 }
@@ -11,6 +11,9 @@ loss(y_pred, y_train)
 
 \item{y_train}{column of 1's and 0's}
 }
+\value{
+Loss, a numeric type
+}
 \description{
-Our loss function
+Our loss function for the logistic regression
 }

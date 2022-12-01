@@ -2,7 +2,7 @@
 % Please edit documentation in R/LogiReg.R
 \name{confusion_matrix}
 \alias{confusion_matrix}
-\title{Title}
+\title{Confusion Matrix}
 \usage{
 confusion_matrix(y_pred, y_train, cutoff_value = 0.5)
 }
