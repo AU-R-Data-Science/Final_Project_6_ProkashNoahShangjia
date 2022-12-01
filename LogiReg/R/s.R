@@ -5,8 +5,8 @@ y_pred <- logistic_regression(x_train, y_train, 40)
 lr <- 0.01
 
 
-beta_1 <- logistic_regression_trainer(x_train, y_train, lr=lr)
-beta_2 <- logistic_regression_trainer(x_train, y_train,20, lr=lr)
+beta_1 <- logistic_regression_trainer(x_train, y_train, 1,lr=lr)
+beta_2 <- logistic_regression_trainer(x_train, y_train, 2, lr=lr)
 beta_3 <- logistic_regression_trainer(x_train, y_train, 40, lr=lr)
 
 y_pred_1 = logistic_reg_predict_dataset(x_train, beta_1)
