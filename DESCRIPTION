@@ -7,7 +7,7 @@ Author: Authors@R: c(
     person("Shangjia", "Li", email = "szl0164", role = "aut"),
     person("Noah", "Heckenively", email = "heckenna@rose-hulman.edu", role = "aut"),
     )
-Maintainer: Prokash Palash <pzd0035@auburn.edu>
+Maintainer: Prokash Deb Palash <pzd0035@auburn.edu>
 Description: Logistic Regression
     Implementation of logistic regression. 
 License: What license is it under?
