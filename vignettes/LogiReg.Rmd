@@ -1,0 +1,93 @@
+---
+title: "Introduction to Logistic Regression"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to Logistic Regresson}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Installation
+
+You can install the development version of LogiReg from [GitHub](https://github.com/) with:
+
+``` {r}
+# install.packages("devtools")
+# devtools::install_github("AU-R-Data-Science/Final_Project_6_ProkashNoahShangjia")
+```
+
+```{r setup}
+library(LogiReg)
+```
+
+## Example
+
+This is a basic example which shows you how to use the package 
+
+```{r example, warning=FALSE}
+## basic example code of how the logistic regression works with this package
+
+## Importing the dataframe. We are using mtcars ecardio dataset from canvas for example.
+
+df <- mtcars
+x_train <- data.matrix(df[,c(1,3,7)], rownames.force = NA)
+y_train <- data.matrix(df[,8], rownames.force = NA)
+```
+
+
+## logistic_regression function will provide predicted values of y
+
+```{r, warning=FALSE}
+y_pred <- logistic_regression(x_train=x_train, y_train=y_train, 
+                              num_epochs = 20, lr=0.01, cutoff=0.5)
+y_pred
+```
+
+## logistic_regression_trainer function will provide the estimated beta value
+
+```{r, warning=FALSE}
+beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train,num_epochs = 20, lr=0.01)
+beta_est
+```
+
+## logistic_reg_predict_dataset funcion predict y given estimated beta values from logistic_regression_trainer function
+
+```{r}
+y_pred_con <- logistic_reg_predict_dataset(x_train, beta_est)
+```
+
+
+## ConI function is the confident interval by using Bootstrap
+
+```{r, warning=FALSE}
+#beta_ci <- ConI(0.05, x_train, y_train, B=20)
+```
+
+
+## logireg_Plot funtion is use to plot the fitted logistic curve to the actual values
+
+```{r, warning=FALSE}
+plot <- logireg_Plot(x_train, y_train, beta_est)
+```
+
+
+## confusion_matrix function perform confusion matrix
+
+```{r, warning=FALSE}
+con_mat <- confusion_matrix(y_pred, y_train, cutoff_value = 0.5)
+```
+
+
+## Make_table function provide accuracy over cutoff values
+
+```{r, warning=FALSE}
+acc_cut <- Make_table(y_pred_con, y_train)
+```
