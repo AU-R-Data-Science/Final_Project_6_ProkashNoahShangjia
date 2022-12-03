@@ -63,14 +63,14 @@ y_train <- data.matrix(cardio[,5], rownames.force = NA)
 
 ```{r, warning=FALSE}
 y_pred <- logistic_regression(x_train=x_train, y_train=y_train, 
-                              num_epochs = 20, lr=0.01, cutoff=0.5)
+                              num_epochs = 50, lr=0.2, cutoff=0.35)
 y_pred
 ```
 
 ## logistic_regression_trainer function will provide the estimated beta value
 
 ```{r, warning=FALSE}
-beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train,num_epochs = 100, lr=0.1)
+beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train,num_epochs = 100, lr=0.2)
 beta_est
 ```
 
@@ -78,6 +78,7 @@ beta_est
 
 ```{r}
 y_pred_con <- logistic_reg_predict_dataset(x_train, beta_est)
+y_pred_con
 ```
 
 
@@ -98,7 +99,7 @@ plot <- logireg_Plot(x_train, y_train, beta_est)
 ## confusion_matrix function perform confusion matrix
 
 ```{r, warning=FALSE}
-con_mat <- confusion_matrix(y_pred, y_train, cutoff_value = 0.6)
+con_mat <- confusion_matrix(y_pred, y_train, cutoff_value = 0.35)
 ```
 
 
@@ -106,6 +107,7 @@ con_mat <- confusion_matrix(y_pred, y_train, cutoff_value = 0.6)
 
 ```{r, warning=FALSE}
 acc_cut <- Make_table(y_pred_con, y_train)
+acc_cut
 ```
 
 

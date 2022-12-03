@@ -291,12 +291,20 @@ logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
 #' @param y_train (this is the actual target variable)
 #' @param cutoff_value this is the cut off value. The default is 0.5
 #' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
+#' @author Prokash Deb
 #' @export
 confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   y_pred = ifelse(y_pred>cutoff_value, 1, 0)
 
-matrix_table=table(y_pred, y_train)
-
+  matrix_table=table(y_pred, y_train)
+  if (nrow(matrix_table)==1) {
+    if(row.names(matrix_table)=='1'){
+      add<-c(0,0)
+      matrix_table<-rbind(add,matrix_table)
+    }else{
+      add<-c(0,0)
+    }
+  }
   prevalence = matrix_table[4]/sum(matrix_table[1:4])
   accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
   sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
