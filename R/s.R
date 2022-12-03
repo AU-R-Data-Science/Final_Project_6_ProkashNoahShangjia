@@ -30,10 +30,10 @@
 #y_pred <- c(1, 0, 0, 1, 0, 1, 0, 1, 1)
 
 
-st <- read.csv("student.csv")
-y_train <- ifelse(st[,24]=="yes", 1, 0)
-x <- st[,c(8, 17, 16, 30)]
-x_train <- data.matrix(x, rownames.force = NA)
+# st <- read.csv("student.csv")
+# y_train <- ifelse(st[,24]=="yes", 1, 0)
+# x <- st[,c(32, 33, 34, 8, 17, 16, 30)]
+# x_train <- data.matrix(x, rownames.force = NA)
 
 
 
