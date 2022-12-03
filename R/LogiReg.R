@@ -71,7 +71,6 @@ loss = function(y_pred, y_train) {
 #' }
 #' @author Noah Heckenlively
 #' @export
-
 logistic_regression = function(x_train, y_train, num_epochs = 100, lr = 1, cutoff = .5) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs, lr = lr)
   y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
@@ -298,12 +297,13 @@ logireg_Plot<-function(x_train, y_train, color="steelblue",line_width=2, num_epo
 #' @param y_train (this is the actual target variable)
 #' @param cutoff_value this is the cut off value. The default is 0.5
 #' @return Confusion matrix, prevalence, accuracy, sensitivity, specificity, False Discovery Rate, Diagnostic Odds Ratio
+#' @author Prokash Deb
 #' @export
 confusion_matrix <- function(y_pred, y_train, cutoff_value=0.5){
-  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
-
-  matrix_table=table(y_pred, y_train)
-
+ 
+  matrix_table = c_matrix(y_pred, y_train)
+  
+  
   prevalence = matrix_table[4]/sum(matrix_table[1:4])
   accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
   sensitivity = matrix_table[4] / sum(matrix_table[4], matrix_table[3])
@@ -347,6 +347,13 @@ get_accuracy<-function(matrix_table){
   return(accuracy)
 }
 
+#' @title Confusion Matrix
+#' @param y_pred (this is the predicted value of target variable)
+#' @param y_train (this is the actual target variable)
+#' @param cutoff_value this is the cut off value. The default is 0.5
+#' @return Confusion matrix as table
+#' @author Shangjia
+#' @export
 c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   y_pred = ifelse(y_pred>cutoff_value, 1, 0)
   matrix_table=table(y_pred, y_train)
