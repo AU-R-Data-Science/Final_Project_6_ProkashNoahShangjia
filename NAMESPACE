@@ -2,6 +2,7 @@
 
 export(ConI)
 export(Make_table)
+export(c_matrix)
 export(confusion_matrix)
 export(logireg_Plot)
 export(logistic_reg_predict_dataset)

@@ -4,18 +4,25 @@
 \alias{logireg_Plot}
 \title{Logistic Regression Plot}
 \usage{
-logireg_Plot(x_train, y_train, beta, color = "steelblue", line_width = 2)
+logireg_Plot(
+  x_train,
+  y_train,
+  color = "steelblue",
+  line_width = 2,
+  num_epochs = 200,
+  lr = 0.01
+)
 }
 \arguments{
 \item{x_train}{\code{dataframe} or matrix (gets cast to matrix) that is our set of features.}
 
 \item{y_train}{\code{dataframe} value of the target. Gets cast to matrix}
 
-\item{beta}{\code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.}
-
 \item{color}{color code or name, see colors, palette. Here NULL means colour "steelblue".}
 
 \item{line_width}{line width, also used for (non-filled) plot symbols, see lines and points.}
+
+\item{beta}{\code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.}
 }
 \description{
 Plot of the fitted logistic curve to the actual values
