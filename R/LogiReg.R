@@ -72,6 +72,7 @@ loss = function(y_pred, y_train) {
 #' @author Noah Heckenlively
 #' @export
 logistic_regression = function(x_train, y_train, num_epochs = 20, lr = 1, cutoff = .5) {
+logistic_regression = function(x_train, y_train, num_epochs = 100, lr = 1, cutoff = .5) {
   beta_cur = logistic_regression_trainer(x_train, y_train, num_epochs = num_epochs, lr = lr)
   y_pred = logistic_reg_predict_dataset(x_train, beta_cur)
   return(make_ones_and_zeroes(y_pred, cutoff))
@@ -266,21 +267,27 @@ ConI<-function(alpha,x_train,y_train,B=20){
 #' @param color color code or name, see colors, palette. Here NULL means colour "steelblue".
 #' @param line_width line width, also used for (non-filled) plot symbols, see lines and points.
 #' @param beta \code{dataframe} or matrix (gets cast to matrix) that is calculate by function logistic_regression_trainer.
-#' @author  Shangjia Li
+#' @author  Shangjia Li and Noah Heckenlively
 #' @export
-logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
+logireg_Plot<-function(x_train, y_train, color="steelblue",line_width=2, num_epochs = 200, lr = .01){
   colnumber<-ncol(x_train)
   rownumber<-nrow(x_train)
-  new_x_train<-matrix(1,rownumber,colnumber-1)
+  new_x_train<-matrix(1,rownumber,1)
   new_x_train<-cbind(x_train[,1],new_x_train)
-  new_x_train[,1]<-x_train[,1]
-  p_hat<-logistic_reg_predict_dataset(x_train,beta)
-  p_hat1<-ifelse(p_hat>0.5, 1, 0)
-  datause<-cbind(p_hat1,x_train[,1],p_hat)
-  plot(datause[,2],y_train, col=color,xlab="x",ylab="predict")
-  lines(sort(datause[,2], decreasing = T), sort(datause[,3], decreasing = T), lwd=line_width)
-}
 
+  plot(x_train[,1],y_train, col=color,xlab="x",ylab="predict")
+
+
+  beta_est <- logistic_regression_trainer(x_train = new_x_train, y_train = y_train, num_epochs = num_epochs, lr= lr)
+
+
+  inc_list = seq(min(x_train[,1]), max(x_train[,1]), .05)
+  new_inc_train<-matrix(1,length(inc_list),1)
+  liners = cbind(inc_list,new_inc_train)
+  lin_pred = logistic_reg_predict_dataset(as.matrix(liners), beta_est)
+
+  lines(inc_list, lin_pred, lwd=line_width)
+}
 
 #### This is the IDEA of how we can find the Confusion Matrix.
 
@@ -362,40 +369,6 @@ c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
   }
   return(matrix_table)
 }
-#Or
-#Make_table<-function(y_pred,y_train){
- # cut_off_value<-seq(0.1,0.9,by=0.1)
-  #for (i in 1:9) {
-  #  cutt<-cut_off_value[i]
-  #  Accuracy<-confusion_matrix(y_pred,y_train,cutt)
- # }
- # return(Accuracy)
-#}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

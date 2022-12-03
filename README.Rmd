@@ -71,7 +71,6 @@ y_pred
 
 ```{r, warning=FALSE}
 beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train,num_epochs = 100, lr=0.2)
-beta_est
 ```
 
 ## logistic_reg_predict_dataset funcion predict y given estimated beta values from logistic_regression_trainer function
