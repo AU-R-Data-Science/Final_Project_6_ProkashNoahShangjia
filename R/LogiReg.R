@@ -322,21 +322,37 @@ matrix_table=table(y_pred, y_train)
 #' @author Shangjia Li
 #' @export
 Make_table<-function(y_pred,y_train){
-  c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
-    y_pred = ifelse(y_pred>cutoff_value, 1, 0)
-    matrix_table=table(y_pred, y_train)
-    accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
-    print(accuracy)
-  }
   cut_off_value<-seq(0.1,0.9,by=0.1)
   Accuracy<-matrix(NA,9,1)
   row.names(Accuracy)<-cut_off_value
   for (i in 1:9) {
     cutt<-cut_off_value[i]
-    Accuracy[i,]<-c_matrix(y_pred,y_train,cutt)
+    cm=c_matrix(y_pred,y_train,cutt)
+    Accuracy[i,]<-get_accuracy(cm)
   }
+  return(Accuracy)
+
 }
 
+get_accuracy<-function(matrix_table){
+  accuracy = sum(matrix_table[1], matrix_table[4])/ sum(matrix_table[1:4])
+  return(accuracy)
+}
+
+c_matrix <- function(y_pred, y_train, cutoff_value=0.5){
+  y_pred = ifelse(y_pred>cutoff_value, 1, 0)
+  matrix_table=table(y_pred, y_train)
+  if (nrow(matrix_table)==1) {
+    if(row.names(matrix_table)=='1'){
+      add<-c(0,0)
+      matrix_table<-rbind(add,matrix_table)
+    }else{
+      add<-c(0,0)
+      matrix_table<-rbind(matrix_table,add)
+    }
+  }
+  return(matrix_table)
+}
 #Or
 #Make_table<-function(y_pred,y_train){
  # cut_off_value<-seq(0.1,0.9,by=0.1)
