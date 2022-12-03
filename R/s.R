@@ -29,3 +29,40 @@
 #y_train <- c(1, 1, 0, 1, 0, 0, 0, 1, 1)
 #y_pred <- c(1, 0, 0, 1, 0, 1, 0, 1, 1)
 
+
+
+logireg_Plot<-function(x_train,y_train,beta,color="steelblue",line_width=2){
+  colnumber<-ncol(x_train)
+  rownumber<-nrow(x_train)
+  new_x_train<-matrix(1,rownumber,colnumber-1)
+  new_x_train<-cbind(x_train[,1],new_x_train)
+  new_x_train[,1]<-x_train[,1]
+  p_hat<-logistic_reg_predict_dataset(x_train,beta)
+  p_hat1<-ifelse(p_hat>0.5, 1, 0)
+  datause<-cbind(p_hat1,x_train[,1],p_hat)
+  plot(datause[,2],y_train, col=color,xlab="x",ylab="predict")
+  lines(sort(datause[,2], decreasing = T), sort(datause[,3], decreasing = T), lwd=line_width)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
