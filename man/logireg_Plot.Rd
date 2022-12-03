@@ -21,5 +21,5 @@ logireg_Plot(x_train, y_train, beta, color = "steelblue", line_width = 2)
 Plot of the fitted logistic curve to the actual values
 }
 \author{
-Shangjia Li
+Shangjia Li and Noah Heckenlively
 }
