@@ -70,7 +70,11 @@ y_pred
 ## logistic_regression_trainer function will provide the estimated beta value
 
 ```{r, warning=FALSE}
+<<<<<<< Updated upstream
 beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train,num_epochs = 100, lr=0.1)
+=======
+beta_est <- logistic_regression_trainer(x_train = x_train, y_train = y_train, num_epochs = 203, lr=0.01)
+>>>>>>> Stashed changes
 beta_est
 ```
 
