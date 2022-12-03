@@ -4,7 +4,7 @@
 \alias{logistic_regression}
 \title{Logistic_regression}
 \usage{
-logistic_regression(x_train, y_train, num_epochs = 20, lr = 1, cutoff = 0.5)
+logistic_regression(x_train, y_train, num_epochs = 100, lr = 1, cutoff = 0.5)
 }
 \arguments{
 \item{x_train}{\code{dataframe} or matrix (gets cast to matrix) that is our set of features.}
