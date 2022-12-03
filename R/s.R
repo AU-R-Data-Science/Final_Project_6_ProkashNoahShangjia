@@ -31,9 +31,9 @@
 
 
 st <- read.csv("student.csv")
-y <- ifelse(st[,24]=="yes", 1, 0)
+y_train <- ifelse(st[,24]=="yes", 1, 0)
 x <- st[,c(8, 17, 16, 30)]
-x <- data.matrix(x, rownames.force = NA)
+x_train <- data.matrix(x, rownames.force = NA)
 
 
 
